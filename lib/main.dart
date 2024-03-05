@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'package:bluetooth/controllers/bluetooth_controller.dart';
+import 'package:bluetooth/views/home_page.dart';
 import 'package:bluetooth/views/start_page.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
@@ -21,7 +22,7 @@ class _MyAppState extends State<MyApp> {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-        home: StartPage()
+        home: BlueController()
     );
   }
 
