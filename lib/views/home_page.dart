@@ -1,4 +1,4 @@
-import 'package:bluetooth/controllers/bluetooth_controller.dart';
+// import 'package:bluetooth/controllers/bluetooth_controller.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
@@ -170,7 +170,14 @@ class HomePage extends StatelessWidget {
             ],
           ),
         ),
-      )
+      ),
+      floatingActionButton: FloatingActionButton(
+        backgroundColor: Colors.white70,
+        onPressed: () {
+          
+        },
+        child: Image.asset("assets/images/goutte.png", width: 25,),
+      ),
     );
   }
 }

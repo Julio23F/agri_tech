@@ -2,10 +2,12 @@ import 'dart:async';
 import 'dart:convert';
 import 'dart:math';
 import 'dart:typed_data';
-
-import 'package:bluetooth/controllers/bluetooth_controller.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bluetooth_serial/flutter_bluetooth_serial.dart';
+import '../BlueConnectionManager.dart';
+import '../BlueController.dart';
+
+// import 'package:bluetooth/controllers/bluetooth_controller.dart';
 
 
 class StartPage extends StatefulWidget {
@@ -16,151 +18,150 @@ class StartPage extends StatefulWidget {
 }
 
 class _StartPageState extends State<StartPage> {
-  List<BluetoothDevice> _devices = [];
-  late BluetoothConnection connection;
-  String adr = "00:23:02:34:DE:91"; // my bluetooth device MAC Adres
-
+  final BlueConnectionManager _connectionManager = BlueConnectionManager();
+  bool isConnecting = false;
   @override
   void initState() {
     super.initState();
-    _loadDevices();
+    _connectionManager.init();
+
   }
 
-  Future<void> _loadDevices() async {
-    List<BluetoothDevice> devices =
-    await FlutterBluetoothSerial.instance.getBondedDevices();
-
-    setState(() {
-      _devices = devices;
-    });
-  }
-
-
-  Future<void> connect(String address, BuildContext context) async {
-    showDialog(
-      context: context,
-      barrierDismissible: false,
-      builder: (BuildContext context) {
-        return AlertDialog(
-          title: Text("Connexion en cours"),
-          content: Container(child: CircularProgressIndicator()),
-        );
-      },
-    );
-
-    try {
-      var connection = await BluetoothConnection.toAddress(address);
-      Navigator.pop(context); // Fermer le dialogue de chargement
-      print("Connecté à l'appareil");
-      showDialog(
-        context: context,
-        builder: (BuildContext context) {
-          return AlertDialog(
-            title: Row(
-              children: [
-                Icon(Icons.check_circle, color: Colors.green),
-                SizedBox(width: 10),
-                Text("Connexion réussie"),
-              ],
-            ),
-            content: Text(
-              "La connexion a été établie avec succès.",
-              style: TextStyle(
-                  color: Colors.grey
-              ),
-
-            ),
-          );
-        },
-      );
+  // Future<void> _loadDevices() async {
+  //   List<BluetoothDevice> devices =
+  //   await FlutterBluetoothSerial.instance.getBondedDevices();
+  //
+  //   setState(() {
+  //     _devices = devices;
+  //   });
+  // }
 
 
-      //Rediriger vers la page Controller
-      Timer(Duration(seconds: 3), () {
-        Navigator.of(context).pop(); // Fermer le dialogue de chargement
-        print("Connecté à l'appareil");
-        Navigator.push(
-          context,
-          MaterialPageRoute(builder: (context) => BlueController()),
-        );
-      });
-
-      connection.input!.listen((Uint8List data) {
-        print('Data incoming: ${ascii.decode(data)}');
-        connection.output.add(data); // Sending data
-
-        if (ascii.decode(data).contains('!')) {
-          connection.finish(); // Closing connection
-          print('Déconnexion');
-          showDialog(
-            context: context,
-            builder: (BuildContext context) {
-              return AlertDialog(
-                title: Row(
-                  children: [
-                    Icon(Icons.error, color: Colors.red),
-                    SizedBox(width: 10),
-                    Text("Déconnexion"),
-                  ],
-                ),
-                content: Text(
-                  "La connexion a été interrompue",
-                  style: TextStyle(
-                      color: Colors.grey
-                  ),
-                ),
-              );
-            },
-          );
-        }
-      }).onDone(() {
-        print('Déconnecté par demande à distance');
-        showDialog(
-          context: context,
-          builder: (BuildContext context) {
-            return AlertDialog(
-              title: Row(
-                children: [
-                  Icon(Icons.error, color: Colors.red), // Icône de danger
-                  SizedBox(width: 10), // Espacement entre l'icône et le titre
-                  Text("Erreur"), // Titre de la boîte de dialogue
-                ],
-              ),
-              content: Text(
-                "Déconnecté par demande à distance",
-                style: TextStyle(
-                    color: Colors.grey
-                ),
-              ),
-            );
-          },
-        );
-      });
-    } catch (exception) {
-      Navigator.pop(context);// Fermer le dialogue de chargement
-      print('La connexion a échoué');
-      showDialog(
-        context: context,
-        builder: (BuildContext context) {
-          return AlertDialog(
-            title: Row(
-              children: [
-                Icon(Icons.error, color: Colors.red), // Icône de danger
-                SizedBox(width: 10), // Espacement entre l'icône et le titre
-                Text("Erreur"), // Titre de la boîte de dialogue
-              ],
-            ),
-            content: Text(
-              "La connexion à l'appareil a échoué",
-              style: TextStyle(
-                  color: Colors.grey
-              ),
-            ),
-          );
-        },
-      );
-    }
-  }
+  // Future<void> connect(String address, BuildContext context) async {
+  //   showDialog(
+  //     context: context,
+  //     barrierDismissible: false,
+  //     builder: (BuildContext context) {
+  //       return AlertDialog(
+  //         title: Text("Connexion en cours"),
+  //         content: Container(child: CircularProgressIndicator()),
+  //       );
+  //     },
+  //   );
+  //
+  //   try {
+  //     var connection = await BluetoothConnection.toAddress(address);
+  //     Navigator.pop(context); // Fermer le dialogue de chargement
+  //     print("Connecté à l'appareil");
+  //     showDialog(
+  //       context: context,
+  //       builder: (BuildContext context) {
+  //         return AlertDialog(
+  //           title: Row(
+  //             children: [
+  //               Icon(Icons.check_circle, color: Colors.green),
+  //               SizedBox(width: 10),
+  //               Text("Connexion réussie"),
+  //             ],
+  //           ),
+  //           content: Text(
+  //             "La connexion a été établie avec succès.",
+  //             style: TextStyle(
+  //                 color: Colors.grey
+  //             ),
+  //
+  //           ),
+  //         );
+  //       },
+  //     );
+  //
+  //
+  //     //Rediriger vers la page Controller
+  //     Timer(Duration(seconds: 3), () {
+  //       Navigator.of(context).pop(); // Fermer le dialogue de chargement
+  //       print("Connecté à l'appareil");
+  //       Navigator.push(
+  //         context,
+  //         MaterialPageRoute(builder: (context) => BlueController()),
+  //       );
+  //     });
+  //
+  //     connection.input!.listen((Uint8List data) {
+  //       print('Data incoming: ${ascii.decode(data)}');
+  //       connection.output.add(data); // Sending data
+  //
+  //       if (ascii.decode(data).contains('!')) {
+  //         connection.finish(); // Closing connection
+  //         print('Déconnexion');
+  //         showDialog(
+  //           context: context,
+  //           builder: (BuildContext context) {
+  //             return AlertDialog(
+  //               title: Row(
+  //                 children: [
+  //                   Icon(Icons.error, color: Colors.red),
+  //                   SizedBox(width: 10),
+  //                   Text("Déconnexion"),
+  //                 ],
+  //               ),
+  //               content: Text(
+  //                 "La connexion a été interrompue",
+  //                 style: TextStyle(
+  //                     color: Colors.grey
+  //                 ),
+  //               ),
+  //             );
+  //           },
+  //         );
+  //       }
+  //     }).onDone(() {
+  //       print('Déconnecté par demande à distance');
+  //       showDialog(
+  //         context: context,
+  //         builder: (BuildContext context) {
+  //           return AlertDialog(
+  //             title: Row(
+  //               children: [
+  //                 Icon(Icons.error, color: Colors.red), // Icône de danger
+  //                 SizedBox(width: 10), // Espacement entre l'icône et le titre
+  //                 Text("Erreur"), // Titre de la boîte de dialogue
+  //               ],
+  //             ),
+  //             content: Text(
+  //               "Déconnecté par demande à distance",
+  //               style: TextStyle(
+  //                   color: Colors.grey
+  //               ),
+  //             ),
+  //           );
+  //         },
+  //       );
+  //     });
+  //   } catch (exception) {
+  //     Navigator.pop(context);// Fermer le dialogue de chargement
+  //     print('La connexion a échoué');
+  //     showDialog(
+  //       context: context,
+  //       builder: (BuildContext context) {
+  //         return AlertDialog(
+  //           title: Row(
+  //             children: [
+  //               Icon(Icons.error, color: Colors.red), // Icône de danger
+  //               SizedBox(width: 10), // Espacement entre l'icône et le titre
+  //               Text("Erreur"), // Titre de la boîte de dialogue
+  //             ],
+  //           ),
+  //           content: Text(
+  //             "La connexion à l'appareil a échoué",
+  //             style: TextStyle(
+  //                 color: Colors.grey
+  //             ),
+  //           ),
+  //         );
+  //       },
+  //     );
+  //   }
+  // }
 
 
   final List<String> icons = [
@@ -179,7 +180,16 @@ class _StartPageState extends State<StartPage> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
+    return isConnecting
+        ? Scaffold(
+            body: Center(
+              child: Text(
+                'Julio',
+                style: TextStyle(fontSize: 24.0),
+              ),
+            )
+          )
+        :Scaffold(
       body: Column(
         children: [
           Container(
@@ -311,7 +321,7 @@ class _StartPageState extends State<StartPage> {
                   ),
                   child: MaterialButton(
                     onPressed: () {
-                      connect(adr, context);
+                      _connectionManager.connect("00:23:02:34:DE:91");
                     },
                     child: Text(
                       'Scanner',

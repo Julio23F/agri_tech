@@ -1,5 +1,7 @@
 import 'dart:async';
-import 'package:bluetooth/controllers/bluetooth_controller.dart';
+import 'package:bluetooth/BlueController.dart';
+import 'package:bluetooth/page_deux.dart';
+// import 'package:bluetooth/controllers/bluetooth_controller.dart';
 import 'package:bluetooth/views/home_page.dart';
 import 'package:bluetooth/views/start_page.dart';
 import 'package:flutter/foundation.dart';
@@ -22,7 +24,8 @@ class _MyAppState extends State<MyApp> {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-        home: BlueController()
+      debugShowCheckedModeBanner: false,
+        home: BluetoothScreen()
     );
   }
 
