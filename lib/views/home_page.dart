@@ -1,12 +1,29 @@
 // import 'package:bluetooth/controllers/bluetooth_controller.dart';
+import 'dart:typed_data';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_blue_plus/flutter_blue_plus.dart';
+import 'package:flutter_bluetooth_serial/flutter_bluetooth_serial.dart';
 import 'package:get/get.dart';
 
-class HomePage extends StatelessWidget {
-  const HomePage({super.key});
+class HomePage extends StatefulWidget {
+  final BluetoothConnection connection;
+  final humidityHistory;
+
+  // const HomePage({Key? key, required this.connection, required this.humidityHistory}) : super(key: key);
+  HomePage({required this.connection, required this.humidityHistory});
+
+  @override
+  State<HomePage> createState() => _HomePageState();
+}
+
+class _HomePageState extends State<HomePage> {
+
+
+  bool isWatered = false;
+
 
   @override
   Widget build(BuildContext context) {
@@ -61,7 +78,7 @@ class HomePage extends StatelessWidget {
                   borderRadius: BorderRadius.all(Radius.circular(20)),
                   color: Color(0xfff4f8fe),
                 ),
-                
+
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
@@ -87,19 +104,28 @@ class HomePage extends StatelessWidget {
                           SizedBox(height: 15,),
                           ElevatedButton(
                             onPressed: () {
+                              setState(() {
+                                isWatered = !isWatered;
+                              });
+                              if(isWatered) {
+                                sendData("on");
+                              }
+                              else{
+                                sendData("off");
+                              }
 
                             },
                             style: ElevatedButton.styleFrom(
-                              backgroundColor: Color(0xFF3c9b22),
+                              backgroundColor: isWatered ? Color(0xff886f72) : Color(0xFF3c9b22),
                               shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(10), // Bordure du bouton
+                                borderRadius: BorderRadius.circular(10),
                               ),
                             ),
                             child: Text(
-                                'Arroser',
-                                style: TextStyle(
+                              isWatered ? 'Stop' : 'Arroser',
+                              style: TextStyle(
                                   color: Colors.white
-                                ),
+                              ),
                             ),
                           ),
                         ],
@@ -124,45 +150,74 @@ class HomePage extends StatelessWidget {
                     ),
                     SizedBox(height: 10,),
                     Container(
-                      padding: EdgeInsets.all(15),
-                      margin: EdgeInsets.only(bottom: 15),
-                      decoration: BoxDecoration(
-                          color: Color(0xfff4f8fe),
-                          borderRadius: BorderRadius.circular(7)
+                      child: StreamBuilder<List<String>>(
+                        stream: widget.humidityHistory,
+                        builder: (context, snapshot) {
+                          if (snapshot.connectionState == ConnectionState.waiting) {
+                            return CircularProgressIndicator();
+                          } else if (snapshot.hasError) {
+                            return Text('Error: ${snapshot.error}');
+                          } else {
+                            return Column(
+                              children: snapshot.data!.map((humidity) {
+                                return Container(
+                                  margin: EdgeInsets.only(bottom: 15),
+                                  child: Row(
+                                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                    children: [
+                                      Expanded(
+                                        child: Column(
+                                          crossAxisAlignment: CrossAxisAlignment.start,
+                                          children: [
+                                            Text(
+                                              "Humide",
+                                              style: TextStyle(
+                                                fontWeight: FontWeight.w800,
+                                                color: Color(0xff183f0e),
+                                              ),
+                                            ),
+                                            Text(
+                                              "La plante est vivable",
+                                              style: TextStyle(
+                                                  color: Colors.grey
+                                              ),
+                                            )
+                                          ],
+                                        ),
+                                      ),
+                                      Text(
+                                        "${humidity}% H",
+                                        style: TextStyle(
+                                            color: Colors.blue,
+                                            fontWeight: FontWeight.w700
+                                        ),
+                                      )
+                                    ],
+                                  ),
+                                );
+                              }).toList(),
+                            );
+                          }
+                        },
                       ),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Expanded(
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Text(
-                                    "Humide",
-                                    style: TextStyle(
-                                      fontWeight: FontWeight.w800,
-                                      color: Color(0xff183f0e),
-                                    ),
-                                ),
-                                Text(
-                                    "La plante est vivable",
-                                    style: TextStyle(
-                                        color: Colors.grey
-                                    ),
-                                )
-                              ],
-                            ),
-                          ),
-                          Text(
-                              "45% H",
-                              style: TextStyle(
-                                color: Colors.blue,
-                                fontWeight: FontWeight.w700
-                              ),
-                          )
-                        ],
-                      ),
-                    )
+
+                    ),
+                    SizedBox(height: 10,),
+
+
+                    // Container(
+                    //   child: ListView.builder(
+                    //     itemCount: widget.humidityHistory.length,
+                    //     itemBuilder: (context, index) {
+                    //       return ListTile(
+                    //         title: Text(widget.humidityHistory[index]),
+                    //       );
+                    //     },
+                    //   ),
+                    // ),
+
+
+
                   ],
                 )
               )
@@ -171,13 +226,34 @@ class HomePage extends StatelessWidget {
           ),
         ),
       ),
-      floatingActionButton: FloatingActionButton(
-        backgroundColor: Colors.white70,
-        onPressed: () {
-          
-        },
-        child: Image.asset("assets/images/goutte.png", width: 25,),
-      ),
+      // floatingActionButton: FloatingActionButton(
+      //   backgroundColor: Colors.white70,
+      //   onPressed: () {
+      //
+      //   },
+      //   child: Image.asset("assets/images/goutte.png", width: 25,),
+      // ),
     );
+  }
+
+  Future<void> sendData(String data) async {
+    data = data.trim();
+    try {
+      List<int> list = data.codeUnits;
+      Uint8List bytes = Uint8List.fromList(list);
+      widget.connection.output.add(bytes);
+      await widget.connection.output.allSent;
+
+    } catch (e) {
+      showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return AlertDialog(
+            title: Text("Erreur"),
+            content: Text("On et Off"),
+          );
+        },
+      );
+    }
   }
 }

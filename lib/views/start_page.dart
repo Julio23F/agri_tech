@@ -2,10 +2,12 @@ import 'dart:async';
 import 'dart:convert';
 import 'dart:math';
 import 'dart:typed_data';
+import 'package:bluetooth/views/home_page.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bluetooth_serial/flutter_bluetooth_serial.dart';
 import '../BlueConnectionManager.dart';
 import '../BlueController.dart';
+import '../page_trois.dart';
 
 // import 'package:bluetooth/controllers/bluetooth_controller.dart';
 
@@ -19,7 +21,55 @@ class StartPage extends StatefulWidget {
 
 class _StartPageState extends State<StartPage> {
   final BlueConnectionManager _connectionManager = BlueConnectionManager();
-  bool isConnecting = false;
+  late BluetoothConnection connection;
+
+  final String targetMacAddress = "00:23:02:34:DE:91";
+
+  bool isConnected = false;
+
+  final List<String> _humidityHistory = [];
+  final StreamController<List<String>> _humidityStreamController = StreamController<List<String>>.broadcast();
+
+
+  void connectToDevice() async {
+    try {
+      BluetoothConnection.toAddress(targetMacAddress).then((_connection) {
+        print('Connected to device');
+        _connection.input!.listen((Uint8List data) {
+          String newData = utf8.decode(data);
+          _humidityHistory.add(newData);
+          _humidityStreamController.add(_humidityHistory);
+        });
+        setState(() {
+          connection = _connection;
+          isConnected = true;
+        });
+
+        // Rediriger vers HomePage après la connexion
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => HomePage(connection: connection, humidityHistory: _humidityStreamController.stream),
+          ),
+        );
+      });
+    } catch (error) {
+      print('Cannot connect, exception occurred');
+      print(error);
+    }
+  }
+
+
+  void sendData(String data) async {
+    data = data.trim();
+    if (connection != null && connection.isConnected) {
+      connection.output.add(utf8.encode(data));
+      await connection.output.allSent;
+      print('Data sent: $data');
+    } else {
+      print('Not connected to any device');
+    }
+  }
   @override
   void initState() {
     super.initState();
@@ -180,16 +230,7 @@ class _StartPageState extends State<StartPage> {
 
   @override
   Widget build(BuildContext context) {
-    return isConnecting
-        ? Scaffold(
-            body: Center(
-              child: Text(
-                'Julio',
-                style: TextStyle(fontSize: 24.0),
-              ),
-            )
-          )
-        :Scaffold(
+    return Scaffold(
       body: Column(
         children: [
           Container(
@@ -321,7 +362,7 @@ class _StartPageState extends State<StartPage> {
                   ),
                   child: MaterialButton(
                     onPressed: () {
-                      _connectionManager.connect("00:23:02:34:DE:91");
+                      connectToDevice();
                     },
                     child: Text(
                       'Scanner',
