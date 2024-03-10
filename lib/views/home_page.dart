@@ -12,7 +12,6 @@ class HomePage extends StatefulWidget {
   final BluetoothConnection connection;
   final humidityHistory;
 
-  // const HomePage({Key? key, required this.connection, required this.humidityHistory}) : super(key: key);
   HomePage({required this.connection, required this.humidityHistory});
 
   @override

@@ -2,7 +2,9 @@ import 'dart:async';
 import 'dart:convert';
 import 'dart:math';
 import 'dart:typed_data';
+import 'package:bluetooth/views/controll_page.dart';
 import 'package:bluetooth/views/home_page.dart';
+import 'package:bluetooth/views/setting.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bluetooth_serial/flutter_bluetooth_serial.dart';
 import '../BlueConnectionManager.dart';
@@ -31,6 +33,7 @@ class _StartPageState extends State<StartPage> {
   final StreamController<List<String>> _humidityStreamController = StreamController<List<String>>.broadcast();
 
 
+
   void connectToDevice() async {
     try {
       BluetoothConnection.toAddress(targetMacAddress).then((_connection) {
@@ -49,7 +52,8 @@ class _StartPageState extends State<StartPage> {
         Navigator.push(
           context,
           MaterialPageRoute(
-            builder: (context) => HomePage(connection: connection, humidityHistory: _humidityStreamController.stream),
+            // builder: (context) => HomePage(connection: connection, humidityHistory: _humidityStreamController.stream),
+            builder: (context) => ControllPage(connection: connection, humidityHistory: _humidityStreamController.stream),
           ),
         );
       });
