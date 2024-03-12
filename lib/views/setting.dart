@@ -1,5 +1,7 @@
+import 'package:bluetooth/views/start_page.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bluetooth_serial/flutter_bluetooth_serial.dart';
+
 
 class SettingPage extends StatefulWidget {
   final BluetoothConnection connection;
@@ -13,6 +15,31 @@ class SettingPage extends StatefulWidget {
 
 class _SettingPageState extends State<SettingPage> {
 
+  bool _switchValue = false;
+
+  void disconnectBluetooth() async {
+    if (widget.connection != null) {
+      try {
+        await widget.connection.close();
+        // La connexion Bluetooth est fermée avec succès
+        // setState(() {
+        //   widget.connection = null;
+        // });
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => StartPage(),
+          ),
+        );
+      } catch (e) {
+        // Gérer les erreurs de déconnexion
+        print('Erreur lors de la déconnexion Bluetooth: $e');
+      }
+    } else {
+      // Aucune connexion Bluetooth à fermer
+      print('Aucune connexion Bluetooth à fermer.');
+    }
+  }
 
   @override
   void initState() {
@@ -46,12 +73,13 @@ class _SettingPageState extends State<SettingPage> {
                 ),
                 child: Column(
                   children: [
+                    SizedBox(height: 20,),
                     Image.asset(
-                      "assets/images/avatar.png",
-                      width: 70,
+                      "assets/images/ispm.png",
+                      width: 90,
                     ),
-                    SizedBox(height: 25,),
-                    Text("Julio23F",
+                    SizedBox(height: 15,),
+                    Text("Adresse Mac",
                       style: TextStyle(
                           fontSize: 18,
                           fontWeight: FontWeight.w600,
@@ -59,7 +87,7 @@ class _SettingPageState extends State<SettingPage> {
                       ),
                     ),
                     Text(
-                      "Julio",
+                      "00:23:02:34:DE:91",
                       style: TextStyle(
                           color: Colors.grey,
                           fontSize: 16
@@ -77,7 +105,7 @@ class _SettingPageState extends State<SettingPage> {
 
                           },
                           child: Text(
-                              "Modifier profil",
+                              "Agri Tech",
                               style: TextStyle(
                                   color: Colors.white,
                                   fontSize: 18
@@ -166,7 +194,7 @@ class _SettingPageState extends State<SettingPage> {
               // Mode Dark
               Container(
                 margin: EdgeInsets.only(bottom: 7),
-                padding: EdgeInsets.all(18),
+                padding: EdgeInsets.symmetric(vertical: 8, horizontal: 18),
                 decoration: BoxDecoration(
                     color: Colors.grey[100],
                     borderRadius: BorderRadius.circular(10)
@@ -189,11 +217,15 @@ class _SettingPageState extends State<SettingPage> {
                       ),
                     ),
                     Spacer(),
-                    Container(
-                        child: Icon(
-                          Icons.chevron_right,
-                          color: Colors.grey,
-                        )
+                    Switch(
+                      value: _switchValue,
+                      onChanged: (newValue) {
+                        setState(() {
+                          _switchValue = newValue;
+                        });
+                      },
+                      activeColor: Colors.blue[40],
+                      inactiveTrackColor: Colors.grey[40],
                     ),
                   ],
                 ),
@@ -218,6 +250,8 @@ class _SettingPageState extends State<SettingPage> {
                           ),
                           TextButton(
                             onPressed: () {
+                              disconnectBluetooth();
+
                             },
                             child: Text('Confirmer'),
                           ),

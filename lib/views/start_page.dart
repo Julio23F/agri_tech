@@ -3,15 +3,10 @@ import 'dart:convert';
 import 'dart:math';
 import 'dart:typed_data';
 import 'package:bluetooth/views/controll_page.dart';
-import 'package:bluetooth/views/home_page.dart';
-import 'package:bluetooth/views/setting.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bluetooth_serial/flutter_bluetooth_serial.dart';
 import '../BlueConnectionManager.dart';
-import '../BlueController.dart';
-import '../page_trois.dart';
 
-// import 'package:bluetooth/controllers/bluetooth_controller.dart';
 
 
 class StartPage extends StatefulWidget {
@@ -34,32 +29,111 @@ class _StartPageState extends State<StartPage> {
 
 
 
+  // void connectToDevice() async {
+  //   try {
+  //     BluetoothConnection.toAddress(targetMacAddress).then((_connection) {
+  //       print('Connected to device');
+  //       _connection.input!.listen((Uint8List data) {
+  //         String newData = utf8.decode(data);
+  //         _humidityHistory.add(newData);
+  //         _humidityStreamController.add(_humidityHistory);
+  //       });
+  //       setState(() {
+  //         connection = _connection;
+  //         isConnected = true;
+  //       });
+  //
+  //       // Rediriger vers ControllPage
+  //       Navigator.push(
+  //         context,
+  //         MaterialPageRoute(
+  //           // builder: (context) => HomePage(connection: connection, humidityHistory: _humidityStreamController.stream),
+  //           builder: (context) => ControllPage(connection: connection, humidityHistory: _humidityStreamController.stream),
+  //         ),
+  //       );
+  //     });
+  //   } catch (error) {
+  //     print('Cannot connect, exception occurred');
+  //     print(error);
+  //   }
+  // }
   void connectToDevice() async {
+    showDialog(
+      context: context,
+      barrierDismissible: false,
+      builder: (BuildContext context) {
+        return Center(
+          child: CircularProgressIndicator(),
+        );
+      },
+    );
     try {
       BluetoothConnection.toAddress(targetMacAddress).then((_connection) {
         print('Connected to device');
+        Navigator.pop(context);
         _connection.input!.listen((Uint8List data) {
           String newData = utf8.decode(data);
           _humidityHistory.add(newData);
           _humidityStreamController.add(_humidityHistory);
+
+          // String newData = utf8.decode(data);
+          // _humidityHistory.add(newData);
+          // _humidityStreamController.add(_humidityHistory.map((humidity) => double.parse(humidity).toStringAsFixed(2)).toList());
+
         });
         setState(() {
           connection = _connection;
           isConnected = true;
         });
 
-        // Rediriger vers HomePage après la connexion
+        // Rediriger vers ControllPage
         Navigator.push(
           context,
           MaterialPageRoute(
-            // builder: (context) => HomePage(connection: connection, humidityHistory: _humidityStreamController.stream),
             builder: (context) => ControllPage(connection: connection, humidityHistory: _humidityStreamController.stream),
           ),
         );
+      }).catchError((error) {
+        print('Cannot connect, exception occurred: $error');
+        Navigator.pop(context);
+        showDialog(
+          context: context,
+          builder: (BuildContext context) {
+            return AlertDialog(
+              title: Text('Erreur de connexion'),
+              content: Text('Impossible de se connecter à cette appareil.'),
+              actions: [
+                TextButton(
+                  onPressed: () {
+                    Navigator.of(context).pop();
+                  },
+                  child: Text('OK'),
+                ),
+              ],
+            );
+          },
+        );
       });
     } catch (error) {
-      print('Cannot connect, exception occurred');
-      print(error);
+      print('Cannot connect, exception occurred: $error');
+      Navigator.pop(context);
+      showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return AlertDialog(
+            title: Text('Erreur de connexion'),
+            content: Text('Impossible de se connecter à cette appareil.'),
+            actions: [
+              TextButton(
+                onPressed: () {
+                  Navigator.of(context).pop();
+                },
+                child: Text('OK'),
+              ),
+            ],
+          );
+        },
+      );
     }
   }
 
@@ -74,6 +148,7 @@ class _StartPageState extends State<StartPage> {
       print('Not connected to any device');
     }
   }
+
   @override
   void initState() {
     super.initState();
