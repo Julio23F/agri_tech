@@ -15,8 +15,8 @@ class BlueConnectionManager {
   void init() async {
     List<BluetoothDevice> devices =
     await FlutterBluetoothSerial.instance.getBondedDevices();
-    // Do something with devices if needed
   }
+
   Future<void> connect(String address) async {
     try {
       _connection = await BluetoothConnection.toAddress(address);
@@ -46,7 +46,6 @@ class BlueConnectionManager {
       Uint8List bytes = Uint8List.fromList(list);
       _connection.output.add(bytes);
       await _connection.output.allSent;
-      // Handle data sent successfully
     } catch (e) {
         AlertDialog(
           title: Text("Erreur"),
@@ -63,7 +62,6 @@ class BlueConnectionManager {
       Uint8List bytes = Uint8List.fromList(list);
       _envo.output.add(bytes);
       await _envo.output.allSent;
-      // Handle data sent successfully
     } catch (e) {
       AlertDialog(
         title: Text("Erreur"),
@@ -79,7 +77,6 @@ class BlueConnectionManager {
       Uint8List bytes = Uint8List.fromList(list);
       _connection.output.add(bytes);
       await _connection.output.allSent;
-      // Handle data sent successfully
     } catch (e) {
         AlertDialog(
           title: Text("Erreur"),

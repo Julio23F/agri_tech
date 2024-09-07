@@ -1,3 +1,5 @@
+import 'package:bluetooth/views/controll_page.dart';
+import 'package:bluetooth/views/home_page.dart';
 import 'package:bluetooth/views/start_page.dart';
 import 'package:flutter/material.dart';
 
@@ -18,7 +20,7 @@ class _MyAppState extends State<MyApp> {
   Widget build(BuildContext context) {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
-        home: StartPage()
+        home: HomePage()
     );
   }
 

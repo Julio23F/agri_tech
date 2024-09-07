@@ -26,7 +26,7 @@ class _ControllPageState extends State<ControllPage> {
       children: [
         Expanded(
           child: [
-            HomePage(connection: widget.connection, humidityHistory: widget.humidityHistory),
+            HomePage(),
             SettingPage(connection: widget.connection, humidityHistory: widget.humidityHistory),
           ][_currentIndex],
         ),
