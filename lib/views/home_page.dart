@@ -62,13 +62,17 @@ class _HomePageState extends State<HomePage> {
     return Scaffold(
       body: Container(
         padding: EdgeInsets.symmetric(horizontal: 10),
-        decoration: BoxDecoration(
-          gradient: LinearGradient(
-            begin: Alignment.centerLeft,
-            end: Alignment.centerRight,
-            colors: [Color(0xff2f2f2), Color(0xffefefef)],
-          ),
-        ),
+        // color: Colors.white.withOpacity(0.3),
+          /*decoration: BoxDecoration(
+            gradient: LinearGradient(
+              begin: Alignment.centerLeft,
+              end: Alignment.centerRight,
+              colors: [Colors.white.withOpacity(0.1), Color(0xffefefef).withOpacity(0.1)],
+            ),
+          ),*/
+          //color: Color(0xffefefef).withOpacity(0.1),
+          color: Colors.white,
+
         height: MediaQuery.sizeOf(context).height,
         child: CustomScrollView(
             slivers: [
@@ -97,21 +101,23 @@ class _HomePageState extends State<HomePage> {
                               ),
                               Container(
                                 child: Column(
+
                                   crossAxisAlignment: CrossAxisAlignment.end,
                                   children: [
                                     Text(
                                       "Agri Tech",
                                       style: TextStyle(
-                                          fontSize: 26,
+                                          fontSize: 24,
                                           color: Color(0xff183f0e),
-                                          fontWeight: FontWeight.w700
+                                          fontWeight: FontWeight.w700,
+                                          height: 0.9,
                                       ),
                                     ),
                                     Text(
                                       "Esiia 2a",
                                       style: TextStyle(
-                                          fontSize: 16,
-                                          color: Color(0xff183f0e).withOpacity(0.8),
+                                          fontSize: 15,
+                                          color: Colors.grey,
                                           fontWeight: FontWeight.w600
                                       ),
                                     ),
@@ -133,287 +139,306 @@ class _HomePageState extends State<HomePage> {
               delegate: SliverAppBarDelegate(
                 minHeight: 325.0,
                 maxHeight: 325.0,
-                child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      //Météo
-                      Container(
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            Expanded(
-                              child: Container(
+                child: Container(
+                  decoration: BoxDecoration(
+                    color: Colors.white,
+                    border: Border(
+                      bottom: BorderSide(
+                        color: Color(0xffefefef),
+                        width: 2, 
+                      ),
+                    ),
+                  ),
+                  child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        //Météo
+                        Container(
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              Expanded(
+                                child: Container(
+                                  decoration: BoxDecoration(
+                                    color: Colors.white,
+                                    border: Border.all(
+                                      color: Colors.grey.withOpacity(0.1),
+                                      width: 1,
+                                    ),
+                                    borderRadius: BorderRadius.circular(20),
+                                  ),
+                                  padding: EdgeInsets.all(15),
+                                  child: Column(
+                                    children: [
+                                      //Haut
+                                      Row(
+                                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                        children: [
+                                          Column(
+                                            crossAxisAlignment: CrossAxisAlignment.start,
+                                            children: [
+                                              Row(
+                                                children: [
+                                                  Icon(Icons.location_on, size: 16,),
+                                                  Text(
+                                                    'Antananarivo',
+                                                    style: TextStyle(
+                                                        fontSize: 15,
+                                                        color: Color(0xff183f0e),
+                                                        fontWeight: FontWeight.w700
+                                                    ),
+                                                  ),
+                                                ],
+                                              ),
+                                              Row(
+                                                children: [
+                                                  SizedBox(width: 10,),
+                                                  RichText(
+                                                    text: TextSpan(
+                                                      children: [
+                                                        TextSpan(
+                                                          text: temperature.isNotEmpty ? temperature : '0°',
+                                                          style: TextStyle(
+                                                            fontSize: 26,
+                                                            color: Color(0xff183f0e),
+                                                            fontWeight: FontWeight.w500,
+                                                          ),
+                                                        ),
+                                                        WidgetSpan(
+                                                          child: Transform.translate(
+                                                            offset: Offset(0, 0),
+                                                            child: Text(
+                                                              'c',
+                                                              style: TextStyle(
+                                                                fontSize: 28,
+                                                                color: Color(0xff183f0e),
+                                                                fontWeight: FontWeight.w500,
+                                                              ),
+                                                            ),
+                                                          ),
+                                                        ),],
+                                                    ),
+                                                  ),
+                                                ],
+                                              ),
+                                            ],
+                                          ),
+                                          Image.asset(
+                                            (etat == "clouds")?
+                                            "assets/icons/nuage.png":
+                                            (etat == "rain")?
+                                            "assets/icons/pluie.png":
+                                            "assets/icons/soleil.png",
+                                            width: 45,
+                                          ),
+                                        ],
+                                      ),
+                                      //Ligne
+                                      Divider(
+                                        color: Colors.grey.withOpacity(0.5),
+                                        thickness: 1,
+                                      ),
+
+                                      //bas
+                                      Row(
+                                        mainAxisAlignment: MainAxisAlignment.spaceAround,
+                                        children: [
+                                          Column(
+                                            crossAxisAlignment: CrossAxisAlignment.start,
+                                            children: [
+                                              Text(
+                                                "Humidity",
+                                                style: TextStyle(
+                                                  fontSize: 10,
+                                                  color: Color(0xff183f0e).withOpacity(0.6),
+                                                  fontWeight: FontWeight.w500,
+                                                ),
+                                              ),
+                                              Text(
+                                                humidity.isNotEmpty ? humidity : '',
+                                                style: TextStyle(
+                                                  fontSize: 13,
+                                                  color: Color(0xff183f0e),
+                                                  fontWeight: FontWeight.w700,
+                                                ),
+                                              ),
+                                            ],
+                                          ),
+                                          Column(
+                                            crossAxisAlignment: CrossAxisAlignment.start,
+                                            children: [
+                                              Text(
+                                                "Précipitation",
+                                                style: TextStyle(
+                                                  fontSize: 10,
+                                                  color: Color(0xff183f0e).withOpacity(0.6),
+                                                  fontWeight: FontWeight.w500,
+                                                ),
+                                              ),
+                                              Text(
+                                                precipitation.isNotEmpty ? precipitation : '',
+                                                style: TextStyle(
+                                                  fontSize: 13,
+                                                  color: Color(0xff183f0e),
+                                                  fontWeight: FontWeight.w700,
+                                                ),
+                                              ),
+                                            ],
+                                          ),
+                                        ],
+                                      )
+                                    ],
+                                  ),
+                                ),
+                              ),
+                              SizedBox(width: 15,),
+                              Container(
+                                height: 130,
+                                width: MediaQuery.of(context).size.width * 1/3,
                                 decoration: BoxDecoration(
-                                  color: Colors.white.withOpacity(0.6),
+                                  color: Colors.white,
+                                  border: Border.all(
+                                    color: Colors.grey.withOpacity(0.1),
+                                    width: 1,
+                                  ),
                                   borderRadius: BorderRadius.circular(20),
                                 ),
                                 padding: EdgeInsets.all(15),
                                 child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
-                                    //Haut
+                                    Text(
+                                      'Sol',
+                                      style: TextStyle(
+                                          fontSize: 20,
+                                          color: Color(0xff183f0e),
+                                          fontWeight: FontWeight.w700
+                                      ),
+                                    ),
+                                    Text(
+                                      'Niveau humidité',
+                                      style: TextStyle(
+                                        fontSize: 13,
+                                        color: Color(0xff183f0e).withOpacity(0.5),
+                                      ),
+                                    ),
+                                    Expanded(child: SizedBox()),
                                     Row(
                                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                       children: [
-                                        Column(
-                                          crossAxisAlignment: CrossAxisAlignment.start,
-                                          children: [
-                                            Row(
-                                              children: [
-                                                Icon(Icons.location_on, size: 16,),
-                                                Text(
-                                                  'Antananarivo',
-                                                  style: TextStyle(
-                                                      fontSize: 15,
-                                                      color: Color(0xff183f0e),
-                                                      fontWeight: FontWeight.w700
-                                                  ),
-                                                ),
-                                              ],
-                                            ),
-                                            Row(
-                                              children: [
-                                                SizedBox(width: 10,),
-                                                RichText(
-                                                  text: TextSpan(
-                                                    children: [
-                                                      TextSpan(
-                                                        text: temperature.isNotEmpty ? temperature : '0°',
-                                                        style: TextStyle(
-                                                          fontSize: 26,
-                                                          color: Color(0xff183f0e),
-                                                          fontWeight: FontWeight.w500,
-                                                        ),
-                                                      ),
-                                                      WidgetSpan(
-                                                        child: Transform.translate(
-                                                          offset: Offset(0, 0),
-                                                          child: Text(
-                                                            'c',
-                                                            style: TextStyle(
-                                                              fontSize: 28,
-                                                              color: Color(0xff183f0e),
-                                                              fontWeight: FontWeight.w500,
-                                                            ),
-                                                          ),
-                                                        ),
-                                                      ),],
-                                                  ),
-                                                ),
-                                              ],
-                                            ),
-                                          ],
+                                        Text(
+                                          "30%",
+                                          style: TextStyle(
+                                              fontSize: 20,
+                                              color: Color(0xff183f0e),
+                                              fontWeight: FontWeight.w700
+                                          ),
                                         ),
-                                        Image.asset(
-                                          (etat == "clouds")?
-                                          "assets/icons/nuage.png":
-                                          (etat == "rain")?
-                                          "assets/icons/pluie.png":
-                                          "assets/icons/soleil.png",
-                                          width: 45,
-                                        ),
-                                      ],
-                                    ),
-                                    //Ligne
-                                    Divider(
-                                      color: Colors.grey.withOpacity(0.5),
-                                      thickness: 1,
-                                    ),
+                                        Container(
+                                          decoration: BoxDecoration(
+                                            color: Colors.grey[300],
+                                            shape: BoxShape.circle,
+                                          ),
+                                          padding: EdgeInsets.all(5),
+                                          child: Icon(
+                                            Icons.arrow_back_sharp,
+                                            size: 15,
+                                            color: Colors.black,
+                                          ),
+                                        )
 
-                                    //bas
-                                    Row(
-                                      mainAxisAlignment: MainAxisAlignment.spaceAround,
-                                      children: [
-                                        Column(
-                                          crossAxisAlignment: CrossAxisAlignment.start,
-                                          children: [
-                                            Text(
-                                              "Humidity",
-                                              style: TextStyle(
-                                                fontSize: 10,
-                                                color: Color(0xff183f0e).withOpacity(0.6),
-                                                fontWeight: FontWeight.w500,
-                                              ),
-                                            ),
-                                            Text(
-                                              humidity.isNotEmpty ? humidity : '',
-                                              style: TextStyle(
-                                                fontSize: 13,
-                                                color: Color(0xff183f0e),
-                                                fontWeight: FontWeight.w700,
-                                              ),
-                                            ),
-                                          ],
-                                        ),
-                                        Column(
-                                          crossAxisAlignment: CrossAxisAlignment.start,
-                                          children: [
-                                            Text(
-                                              "Précipitation",
-                                              style: TextStyle(
-                                                fontSize: 10,
-                                                color: Color(0xff183f0e).withOpacity(0.6),
-                                                fontWeight: FontWeight.w500,
-                                              ),
-                                            ),
-                                            Text(
-                                              precipitation.isNotEmpty ? precipitation : '',
-                                              style: TextStyle(
-                                                fontSize: 13,
-                                                color: Color(0xff183f0e),
-                                                fontWeight: FontWeight.w700,
-                                              ),
-                                            ),
-                                          ],
-                                        ),
                                       ],
                                     )
                                   ],
                                 ),
                               ),
-                            ),
-                            SizedBox(width: 15,),
-                            Container(
-                              height: 130,
-                              width: MediaQuery.of(context).size.width * 1/3,
-                              decoration: BoxDecoration(
-                                color: Colors.white.withOpacity(0.6),
-                                borderRadius: BorderRadius.circular(20),
-                              ),
-                              padding: EdgeInsets.all(15),
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Text(
-                                    'Sol',
-                                    style: TextStyle(
-                                        fontSize: 20,
-                                        color: Color(0xff183f0e),
-                                        fontWeight: FontWeight.w700
-                                    ),
-                                  ),
-                                  Text(
-                                    'Niveau humidité',
-                                    style: TextStyle(
-                                      fontSize: 13,
-                                      color: Color(0xff183f0e).withOpacity(0.5),
-                                    ),
-                                  ),
-                                  Expanded(child: SizedBox()),
-                                  Row(
-                                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                    children: [
-                                      Text(
-                                        "30%",
-                                        style: TextStyle(
-                                            fontSize: 20,
-                                            color: Color(0xff183f0e),
-                                            fontWeight: FontWeight.w700
-                                        ),
-                                      ),
-                                      Container(
-                                        decoration: BoxDecoration(
-                                          color: Colors.grey[300],
-                                          shape: BoxShape.circle,
-                                        ),
-                                        padding: EdgeInsets.all(5),
-                                        child: Icon(
-                                          Icons.arrow_back_sharp,
-                                          size: 15,
-                                          color: Colors.black,
-                                        ),
-                                      )
-
-                                    ],
-                                  )
-                                ],
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-
-                      //Etat du sol
-                      Container(
-                        margin: EdgeInsets.only(top: 20),
-                        padding: EdgeInsets.symmetric(vertical: 10, horizontal: 15),
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.all(Radius.circular(20)),
-                          color: Color(0xfff4f8fe),
+                            ],
+                          ),
                         ),
 
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            Expanded(
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Text(
-                                    "Etat satisfaisant",
-                                    style: TextStyle(
-                                        color: Color(0xff183f0e),
-                                        fontSize: 17,
-                                        fontWeight: FontWeight.w700
-                                    ),
-                                  ),
-                                  Text(
-                                    "Actuellement, le sol est vivable pour cette agriculture",
-                                    style: TextStyle(
-                                        fontSize: 12,
-                                        color: Colors.grey
-                                    ),
-                                  ),
-                                  SizedBox(height: 15,),
-                                  ElevatedButton(
-                                    onPressed: () {
-                                      setState(() {
-                                        isWatered = !isWatered;
-                                      });
-                                      if(isWatered) {
-                                        sendData("on");
-                                      }
-                                      else{
-                                        sendData("off");
-                                      }
+                        //Etat du sol
+                        Container(
+                          margin: EdgeInsets.only(top: 20),
+                          padding: EdgeInsets.symmetric(vertical: 10, horizontal: 15),
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.all(Radius.circular(20)),
+                            color: Color(0xfff4f8fe),
+                          ),
 
-                                    },
-                                    style: ElevatedButton.styleFrom(
-                                      backgroundColor: isWatered ? Color(0xff886f72) : Color(0xFF3c9b22),
-                                      shape: RoundedRectangleBorder(
-                                        borderRadius: BorderRadius.circular(10),
-                                      ),
-                                    ),
-                                    child: Text(
-                                      isWatered ? 'Stopper' : 'Arroser',
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              Expanded(
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Text(
+                                      "Etat satisfaisant",
                                       style: TextStyle(
-                                          color: Colors.white
+                                          color: Color(0xff183f0e),
+                                          fontSize: 17,
+                                          fontWeight: FontWeight.w700
                                       ),
                                     ),
-                                  ),
-                                ],
+                                    Text(
+                                      "Actuellement, le sol est vivable pour cette agriculture",
+                                      style: TextStyle(
+                                          fontSize: 12,
+                                          color: Colors.grey
+                                      ),
+                                    ),
+                                    SizedBox(height: 15,),
+                                    ElevatedButton(
+                                      onPressed: () {
+                                        setState(() {
+                                          isWatered = !isWatered;
+                                        });
+                                        if(isWatered) {
+                                          sendData("on");
+                                        }
+                                        else{
+                                          sendData("off");
+                                        }
+
+                                      },
+                                      style: ElevatedButton.styleFrom(
+                                        backgroundColor: isWatered ? Color(0xff886f72) : Color(0xFF3c9b22),
+                                        shape: RoundedRectangleBorder(
+                                          borderRadius: BorderRadius.circular(10),
+                                        ),
+                                      ),
+                                      child: Text(
+                                        isWatered ? 'Stopper' : 'Arroser',
+                                        style: TextStyle(
+                                            color: Colors.white
+                                        ),
+                                      ),
+                                    ),
+                                  ],
+                                ),
                               ),
-                            ),
-                            ColorFiltered(
-                              colorFilter: isWatered?ColorFilter.matrix(<double>[
-                                0.9, 0.2, 0.1, 0, 0,
-                                0.5, 0.3, 0.1, 0, 0,
-                                0.3, 0.2, 0.1, 0, 0,
-                                // Alpha channel
-                                0, 0, 0, 1, 0,
-                              ]):
-                              ColorFilter.matrix(<double>[
-                                0.8, 0.3, 0.2, 0, 0,
-                                0.4, 0.6, 0.2, 0, 0,
-                                0.3, 0.2, 0.2, 0, 0,
-                                0, 0, 0, 1, 0,
-                              ]),
-                              child: Image.asset('assets/images/representation.png'),
-                            ),
-                          ],
+                              ColorFiltered(
+                                colorFilter: isWatered?ColorFilter.matrix(<double>[
+                                  0.9, 0.2, 0.1, 0, 0,
+                                  0.5, 0.3, 0.1, 0, 0,
+                                  0.3, 0.2, 0.1, 0, 0,
+                                  // Alpha channel
+                                  0, 0, 0, 1, 0,
+                                ]):
+                                ColorFilter.matrix(<double>[
+                                  0.8, 0.3, 0.2, 0, 0,
+                                  0.4, 0.6, 0.2, 0, 0,
+                                  0.3, 0.2, 0.2, 0, 0,
+                                  0, 0, 0, 1, 0,
+                                ]),
+                                child: Image.asset('assets/images/representation.png'),
+                              ),
+                            ],
+                          ),
                         ),
-                      ),
-                    ],
-                  )
+                      ],
+                    ),
+                )
                 )
               ),
               SliverList(
@@ -427,12 +452,16 @@ class _HomePageState extends State<HomePage> {
                             for(int i=0; i<15; i++)
                               Container(
                                 width: MediaQuery.of(context).size.width,
-                                margin: EdgeInsets.symmetric(vertical: 5),
+                                margin: EdgeInsets.only(top: 10),
+                                padding: EdgeInsets.symmetric(vertical: 17, horizontal: 15),
                                 decoration: BoxDecoration(
                                   color: Colors.white,
+                                  border: Border.all(
+                                    color: Colors.grey.withOpacity(0.1),
+                                    width: 2,
+                                  ),
                                   borderRadius: BorderRadius.circular(10),
                                 ),
-                                padding: EdgeInsets.symmetric(vertical: 17, horizontal: 15),
                                 child: Text("essais"),
                               )
 
