@@ -418,7 +418,7 @@ class _HomePageState extends State<HomePage> {
                                 ),
                               ),
                               ColorFiltered(
-                                colorFilter: isWatered?ColorFilter.matrix(<double>[
+                                colorFilter: !isWatered?ColorFilter.matrix(<double>[
                                   0.9, 0.2, 0.1, 0, 0,
                                   0.5, 0.3, 0.1, 0, 0,
                                   0.3, 0.2, 0.1, 0, 0,

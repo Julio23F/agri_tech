@@ -1,6 +1,9 @@
 import 'package:bluetooth/views/start_page.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bluetooth_serial/flutter_bluetooth_serial.dart';
+import 'package:page_transition/page_transition.dart';
+
+import 'infoApp.dart';
 
 
 class SettingPage extends StatefulWidget {
@@ -118,119 +121,53 @@ class _SettingPageState extends State<SettingPage> {
               ),
               SizedBox(height: 20,),
 
-              // Info compte
-              Container(
-                margin: EdgeInsets.only(bottom: 7),
-                padding: EdgeInsets.all(18),
-                decoration: BoxDecoration(
-                    color: Colors.grey[100],
-                    borderRadius: BorderRadius.circular(10)
-                ),
-                child: Row(
-                  children: [
-                    Container(
-                        margin: EdgeInsets.only(right: 18),
-                        child: Icon(
-                          Icons.comment_outlined,
-                          size: 25,
-                          color: Color(0xff409bfc),
-                        )
-                    ),
-                    Text(
-                      "Mon compte",
-                      style: TextStyle(
-                          color: Color(0xff0c3141),
-                          fontWeight: FontWeight.w500
-                      ),
-                    ),
-                    Spacer(),
-                    Container(
-                        child: Icon(
-                          Icons.chevron_right,
-                          color: Colors.grey,
-                        )
-                    ),
-                  ],
-                ),
-              ),
-
 
               // Info concernant l'application
-              Container(
-                margin: EdgeInsets.only(bottom: 7),
-                padding: EdgeInsets.all(18),
-                decoration: BoxDecoration(
-                    color: Colors.grey[100],
-                    borderRadius: BorderRadius.circular(10)
-                ),
-                child: Row(
-                  children: [
-                    Container(
-                        margin: EdgeInsets.only(right: 18),
-                        child: Icon(
+              GestureDetector(
+                onTap: () {
+                  Navigator.push(
+                    context,
+                    PageTransition(
+                      type: PageTransitionType.rightToLeft,
+                      child: const InfoApp(),
+                    ),
+                  );
+                },
+                child: Container(
+                  margin: const EdgeInsets.only(bottom: 7),
+                  padding: const EdgeInsets.all(16),
+                  decoration: BoxDecoration(
+                      color: Colors.grey[100],
+                      borderRadius: BorderRadius.circular(10)
+                  ),
+                  child: Row(
+                    children: [
+                      Container(
+                        margin: const EdgeInsets.only(right: 18),
+                        child: const Icon(
                           Icons.info_outline,
                           size: 25,
                           color: Color(0xff409bfc),
-                        )
-                    ),
-                    Text(
-                      "À propos",
-                      style: TextStyle(
-                          color: Color(0xff0c3141),
-                          fontWeight: FontWeight.w500
+                        ),
                       ),
-                    ),
-                    Spacer(),
-                    Container(
-                        child: Icon(
+                      Text(
+                        "À propos",
+                        style: TextStyle(
+                            color: Color(0xff0c3141),
+                            fontWeight: FontWeight.w500
+                        ),
+                      ),
+                      const Spacer(),
+                      Container(
+                        child: const Icon(
                           Icons.chevron_right,
                           color: Colors.grey,
-                        )
-                    ),
-                  ],
-                ),
-              ),
-
-              // Mode Dark
-              Container(
-                margin: EdgeInsets.only(bottom: 7),
-                padding: EdgeInsets.symmetric(vertical: 8, horizontal: 18),
-                decoration: BoxDecoration(
-                    color: Colors.grey[100],
-                    borderRadius: BorderRadius.circular(10)
-                ),
-                child: Row(
-                  children: [
-                    Container(
-                        margin: EdgeInsets.only(right: 18),
-                        child: Icon(
-                          Icons.wb_sunny_outlined,
-                          size: 25,
-                          color: Color(0xff409bfc),
-                        )
-                    ),
-                    Text(
-                      "Dark Mode",
-                      style: TextStyle(
-                          color: Color(0xff0c3141),
-                          fontWeight: FontWeight.w500
+                        ),
                       ),
-                    ),
-                    Spacer(),
-                    Switch(
-                      value: _switchValue,
-                      onChanged: (newValue) {
-                        setState(() {
-                          _switchValue = newValue;
-                        });
-                      },
-                      activeColor: Colors.blue[40],
-                      inactiveTrackColor: Colors.grey[40],
-                    ),
-                  ],
+                    ],
+                  ),
                 ),
               ),
-
               // Déconexion
               GestureDetector(
                 onTap: () {
