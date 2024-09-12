@@ -1,6 +1,7 @@
 // import 'package:bluetooth/controllers/bluetooth_controller.dart';
 import 'dart:convert';
 import 'dart:typed_data';
+import 'package:flutter_bluetooth_serial/flutter_bluetooth_serial.dart';
 import 'package:http/http.dart' as http;
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -8,6 +9,11 @@ import 'package:flutter/widgets.dart';
 
 
 class HomePage extends StatefulWidget {
+  // final BluetoothConnection connection;
+  // final humidityHistory;
+  //
+  // HomePage({required this.connection, required this.humidityHistory});
+  const HomePage({super.key});
 
   @override
   State<HomePage> createState() => _HomePageState();
@@ -394,10 +400,10 @@ class _HomePageState extends State<HomePage> {
                                           isWatered = !isWatered;
                                         });
                                         if(isWatered) {
-                                          sendData("on");
+                                          // sendData("on");
                                         }
                                         else{
-                                          sendData("off");
+                                          // sendData("off");
                                         }
 
                                       },
@@ -449,22 +455,74 @@ class _HomePageState extends State<HomePage> {
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            for(int i=0; i<15; i++)
-                              Container(
-                                width: MediaQuery.of(context).size.width,
-                                margin: EdgeInsets.only(top: 10),
-                                padding: EdgeInsets.symmetric(vertical: 17, horizontal: 15),
-                                decoration: BoxDecoration(
-                                  color: Colors.white,
-                                  border: Border.all(
-                                    color: Colors.grey.withOpacity(0.1),
-                                    width: 2,
-                                  ),
-                                  borderRadius: BorderRadius.circular(10),
-                                ),
-                                child: Text("essais"),
-                              )
-
+                            // for(int i=0; i<15; i++)
+                            //   Container(
+                            //     width: MediaQuery.of(context).size.width,
+                            //     margin: EdgeInsets.only(top: 10),
+                            //     padding: EdgeInsets.symmetric(vertical: 17, horizontal: 15),
+                            //     decoration: BoxDecoration(
+                            //       color: Colors.white,
+                            //       border: Border.all(
+                            //         color: Colors.grey.withOpacity(0.1),
+                            //         width: 2,
+                            //       ),
+                            //       borderRadius: BorderRadius.circular(10),
+                            //     ),
+                            //     child: Text("essais"),
+                            //   )
+                            // Container(
+                            //   child: StreamBuilder<List<String>>(
+                            //     stream: widget.humidityHistory,
+                            //     builder: (context, snapshot) {
+                            //       if (snapshot.connectionState == ConnectionState.waiting) {
+                            //         return CircularProgressIndicator();
+                            //       } else if (snapshot.hasError) {
+                            //         return Text('Error: ${snapshot.error}');
+                            //       } else {
+                            //         return Column(
+                            //           children: snapshot.data!.map((humidity) {
+                            //             return Container(
+                            //               margin: EdgeInsets.only(bottom: 15),
+                            //               child: Row(
+                            //                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            //                 children: [
+                            //                   Expanded(
+                            //                     child: Column(
+                            //                       crossAxisAlignment: CrossAxisAlignment.start,
+                            //                       children: [
+                            //                         Text(
+                            //                           "Humide",
+                            //                           style: TextStyle(
+                            //                             fontWeight: FontWeight.w800,
+                            //                             color: Color(0xff183f0e),
+                            //                           ),
+                            //                         ),
+                            //                         Text(
+                            //                           "La plante est vivable",
+                            //                           style: TextStyle(
+                            //                               color: Colors.grey
+                            //                           ),
+                            //                         )
+                            //                       ],
+                            //                     ),
+                            //                   ),
+                            //                   Text(
+                            //                     "${humidity}% H",
+                            //                     style: TextStyle(
+                            //                         color: Colors.blue,
+                            //                         fontWeight: FontWeight.w700
+                            //                     ),
+                            //                   )
+                            //                 ],
+                            //               ),
+                            //             );
+                            //           }).toList(),
+                            //         );
+                            //       }
+                            //     },
+                            //   ),
+                            //
+                            // ),
 
 
                           ],
@@ -481,24 +539,26 @@ class _HomePageState extends State<HomePage> {
     );
   }
 
-  Future<void> sendData(String data) async {
-    data = data.trim();
-    try {
-      List<int> list = data.codeUnits;
-      Uint8List bytes = Uint8List.fromList(list);
-
-    } catch (e) {
-      showDialog(
-        context: context,
-        builder: (BuildContext context) {
-          return AlertDialog(
-            title: Text("Erreur"),
-            content: Text("On et Off"),
-          );
-        },
-      );
-    }
-  }
+  // Future<void> sendData(String data) async {
+  //   data = data.trim();
+  //   try {
+  //     List<int> list = data.codeUnits;
+  //     Uint8List bytes = Uint8List.fromList(list);
+  //     widget.connection.output.add(bytes);
+  //     await widget.connection.output.allSent;
+  //
+  //   } catch (e) {
+  //     showDialog(
+  //       context: context,
+  //       builder: (BuildContext context) {
+  //         return AlertDialog(
+  //           title: Text("Erreur"),
+  //           content: Text("On et Off"),
+  //         );
+  //       },
+  //     );
+  //   }
+  // }
 }
 
 class SliverAppBarDelegate extends SliverPersistentHeaderDelegate {

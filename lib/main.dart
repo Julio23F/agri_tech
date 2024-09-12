@@ -1,4 +1,5 @@
 import 'package:bluetooth/views/home_page.dart';
+import 'package:bluetooth/views/start_page.dart';
 import 'package:flutter/material.dart';
 
 void main() {
