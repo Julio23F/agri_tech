@@ -202,7 +202,7 @@ class _HomePageState extends State<HomePage> {
                                                           text: TextSpan(
                                                             children: [
                                                               TextSpan(
-                                                                text: temperature.isNotEmpty ? temperature : '0°',
+                                                                text: '36°',
                                                                 style: TextStyle(
                                                                   fontSize: 26,
                                                                   color: Color(0xff183f0e),
@@ -228,12 +228,7 @@ class _HomePageState extends State<HomePage> {
                                                     ),
                                                   ],
                                                 ),
-                                                Image.asset(
-                                                  (etat == "clouds")?
-                                                  "assets/icons/nuage.png":
-                                                  (etat == "rain")?
-                                                  "assets/icons/pluie.png":
-                                                  "assets/icons/soleil.png",
+                                                Image.asset("assets/icons/nuage.png",
                                                   width: 45,
                                                 ),
                                               ],
@@ -260,7 +255,7 @@ class _HomePageState extends State<HomePage> {
                                                       ),
                                                     ),
                                                     Text(
-                                                      humidity.isNotEmpty ? humidity : '',
+                                                      '16%',
                                                       style: TextStyle(
                                                         fontSize: 13,
                                                         color: Color(0xff183f0e),
@@ -281,7 +276,7 @@ class _HomePageState extends State<HomePage> {
                                                       ),
                                                     ),
                                                     Text(
-                                                      precipitation.isNotEmpty ? precipitation : '',
+                                                      "0%",
                                                       style: TextStyle(
                                                         fontSize: 13,
                                                         color: Color(0xff183f0e),
@@ -296,67 +291,67 @@ class _HomePageState extends State<HomePage> {
                                         ),
                                       ),
                                     ),
-                                    SizedBox(width: 15,),
-                                    Container(
-                                      height: 130,
-                                      width: MediaQuery.of(context).size.width * 1/3,
-                                      decoration: BoxDecoration(
-                                        color: Colors.white,
-                                        border: Border.all(
-                                          color: Colors.grey.withOpacity(0.1),
-                                          width: 1,
-                                        ),
-                                        borderRadius: BorderRadius.circular(20),
-                                      ),
-                                      padding: EdgeInsets.all(15),
-                                      child: Column(
-                                        crossAxisAlignment: CrossAxisAlignment.start,
-                                        children: [
-                                          Text(
-                                            'Sol',
-                                            style: TextStyle(
-                                                fontSize: 20,
-                                                color: Color(0xff183f0e),
-                                                fontWeight: FontWeight.w700
-                                            ),
-                                          ),
-                                          Text(
-                                            'Niveau humidité',
-                                            style: TextStyle(
-                                              fontSize: 13,
-                                              color: Color(0xff183f0e).withOpacity(0.5),
-                                            ),
-                                          ),
-                                          Expanded(child: SizedBox()),
-                                          Row(
-                                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                            children: [
-                                              Text(
-                                                "30%",
-                                                style: TextStyle(
-                                                    fontSize: 20,
-                                                    color: Color(0xff183f0e),
-                                                    fontWeight: FontWeight.w700
-                                                ),
-                                              ),
-                                              Container(
-                                                decoration: BoxDecoration(
-                                                  color: Colors.grey[300],
-                                                  shape: BoxShape.circle,
-                                                ),
-                                                padding: EdgeInsets.all(5),
-                                                child: Icon(
-                                                  Icons.arrow_back_sharp,
-                                                  size: 15,
-                                                  color: Colors.black,
-                                                ),
-                                              )
-
-                                            ],
-                                          )
-                                        ],
-                                      ),
-                                    ),
+                                    // SizedBox(width: 15,),
+                                    // Container(
+                                    //   height: 130,
+                                    //   width: MediaQuery.of(context).size.width * 1/3,
+                                    //   decoration: BoxDecoration(
+                                    //     color: Colors.white,
+                                    //     border: Border.all(
+                                    //       color: Colors.grey.withOpacity(0.1),
+                                    //       width: 1,
+                                    //     ),
+                                    //     borderRadius: BorderRadius.circular(20),
+                                    //   ),
+                                    //   padding: EdgeInsets.all(15),
+                                    //   child: Column(
+                                    //     crossAxisAlignment: CrossAxisAlignment.start,
+                                    //     children: [
+                                    //       Text(
+                                    //         'Sol',
+                                    //         style: TextStyle(
+                                    //             fontSize: 20,
+                                    //             color: Color(0xff183f0e),
+                                    //             fontWeight: FontWeight.w700
+                                    //         ),
+                                    //       ),
+                                    //       Text(
+                                    //         'Niveau humidité',
+                                    //         style: TextStyle(
+                                    //           fontSize: 13,
+                                    //           color: Color(0xff183f0e).withOpacity(0.5),
+                                    //         ),
+                                    //       ),
+                                    //       Expanded(child: SizedBox()),
+                                    //       Row(
+                                    //         mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                    //         children: [
+                                    //           Text(
+                                    //             "30%",
+                                    //             style: TextStyle(
+                                    //                 fontSize: 20,
+                                    //                 color: Color(0xff183f0e),
+                                    //                 fontWeight: FontWeight.w700
+                                    //             ),
+                                    //           ),
+                                    //           Container(
+                                    //             decoration: BoxDecoration(
+                                    //               color: Colors.grey[300],
+                                    //               shape: BoxShape.circle,
+                                    //             ),
+                                    //             padding: EdgeInsets.all(5),
+                                    //             child: Icon(
+                                    //               Icons.arrow_back_sharp,
+                                    //               size: 15,
+                                    //               color: Colors.black,
+                                    //             ),
+                                    //           )
+                                    //
+                                    //         ],
+                                    //       )
+                                    //     ],
+                                    //   ),
+                                    // ),
                                   ],
                                 ),
                               ),
@@ -399,10 +394,10 @@ class _HomePageState extends State<HomePage> {
                                                 isWatered = !isWatered;
                                               });
                                               if(isWatered) {
-                                                // sendData("on");
+                                                sendData("on");
                                               }
                                               else{
-                                                // sendData("off");
+                                                sendData("off");
                                               }
 
                                             },
